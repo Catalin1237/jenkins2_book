@@ -1,0 +1,23 @@
+node('Master_Node') {
+    
+    stage('Source') {
+        // Ask for user input to decide whether to proceed
+        def answer = input message: 'Do you want to fetch the source code?', 
+            parameters: [booleanParam(defaultValue: true, description: 'Fetch the source code', name: 'fetchSource')]
+
+        if (answer) {
+            echo 'User chose to fetch the source code.'
+            git 'https://github.com/brentlaster/gradle-greetings.git'
+        } else {
+            echo 'User chose to skip fetching the source code.'
+        }
+    }
+    
+    stage('Build') {
+        echo 'Proceeding to the Build stage...'
+    }
+    
+    stage('Hello Message') {
+        echo 'Hello there!'
+    }
+}
