@@ -21,3 +21,35 @@ node('Master_Node') {
         echo 'Hello there!'
     }
 }
+---------------------------------------------------
+
+node('Master_Node') {
+    
+    stage('Source') {
+        // Ask for user input to decide whether to proceed
+        def answer = input message: 'Do you want to fetch the source code?', 
+            parameters: [booleanParam(defaultValue: true, description: 'Fetch the source code', name: 'fetchSource')]
+
+        if (answer) {
+            echo 'User chose to fetch the source code.'
+            git 'https://github.com/brentlaster/gradle-greetings.git'
+        } else {
+            echo 'User chose to skip fetching the source code.'
+        }
+    }
+    
+    stage('Build') {
+        echo 'Proceeding to the Build stage...'
+        
+        def resp = input id: 'ctns-prompt', 
+            message: 'Continue to the next stage?', 
+            parameters: [string(defaultValue: '', description: '', name: 'param1')],
+            submitterParameter: 'approver'
+        // echo "Answered by ${resp}"
+        echo "Answered by " + resp['approver'] + ", value: " + resp['param1']
+    }
+    
+    stage('Hello Message') {
+        echo 'Hello there!'
+    }
+}
